@@ -1,0 +1,117 @@
+﻿@model List<TMDB.ResponseModels.Movie.Result>
+@using Newtonsoft.Json;
+@{
+    ViewData["Title"] = "Home Page";
+
+}
+
+<div class="text-center">
+
+    @{
+
+        if (TempData.ContainsKey("searchCount"))
+        {
+            <form class="row" action="Home/SearchAction" method="post">
+                <div class="col-11">
+                    <input type="text" class="form-control" name="searchQuery" placeholder="Search movies">
+                </div>
+                <div class="col-1">
+                    <button type="submit" class="btn btn-info mb-3" id="btnPerformMovieSearch">Search</button>
+                </div>
+
+            </form>
+
+            var resultCount = (int)TempData["searchCount"];
+            if (resultCount > 0)
+            {
+                var searchResults = JsonConvert.DeserializeObject<List<TMDB.ResponseModels.Movie.Result>>((string)TempData["searchResults"]);
+                <p>Results: @resultCount</p>
+                <div class="container">
+                    @foreach (var movie in searchResults)
+                    {
+                        var overview = movie.overview;
+                        if (overview.Length > 250)
+                        {
+                            overview = overview.Remove(250) + "...";
+                        }
+                        var posterPath = $"https://image.tmdb.org/t/p/original/{@movie.poster_path}";
+                        <div class="row">
+                            <div class="col-2">
+                                <img class="img-fluid img-thumbnail" src="@posterPath">
+                            </div>
+                            <div class="col">
+                                <p class="text-left">
+                                    <b>@movie.title</b><br>
+                                    @movie.release_date<br>
+                                    @overview<br>
+                                    <b>Rating</b> @movie.vote_average <b>votes</b> @movie.vote_count<br>
+                                    <b>Popularity Index</b> @movie.popularity
+                                </p>
+                            </div>
+
+                        </div>
+                        <hr>
+
+
+                    }
+                </div>
+
+
+            }
+            else
+            {
+                <p>Sorry, no results found, try searching for a different movie (for example "The Avengers")</p>
+            }
+        }
+        else
+        {
+            var searchResults = JsonConvert.DeserializeObject<List<TMDB.ResponseModels.Movie.Result>>((string)TempData["trendingResults"]);
+
+            <h1 class="text-left"><b>Welcome.</b></h1>
+            <h5 class="text-left text-secondary">TMDB Search displays movie information from The Movie Database. Go ahead and search for a movie!</h5>
+            <br />
+            <form class="row" action="Home/SearchAction" method="post">
+                <div class="col-11">
+                    <input type="text" class="form-control" name="searchQuery" placeholder="Search movies">
+                </div>
+                <div class="col-1">
+                    <button type="submit" class="btn btn-info mb-3" id="btnPerformMovieSearch">Search</button>
+                </div>
+
+            </form>
+            <br />
+            <h4 class="text-left"><b>Trending Movies</b></h4>
+            <div class="container">
+                @foreach (var movie in searchResults)
+                {
+                    var overview = movie.overview;
+                    if (overview.Length > 250)
+                    {
+                        overview = overview.Remove(250) + "...";
+                    }
+                    var posterPath = $"https://image.tmdb.org/t/p/original/{@movie.poster_path}";
+                    <div class="row">
+                        <div class="col-2">
+                            <img class="img-fluid img-thumbnail" src="@posterPath">
+                        </div>
+                        <div class="col">
+                            <p class="text-left">
+                                <b>@movie.title</b><br>
+                                @movie.release_date<br>
+                                @overview<br>
+                                <b>Rating</b> @movie.vote_average <b>votes</b> @movie.vote_count<br>
+                                <b>Popularity Index</b> @movie.popularity
+                            </p>
+                        </div>
+
+                    </div>
+                    <hr>
+
+
+                }
+            </div>
+        }
+
+
+    }
+</div>
