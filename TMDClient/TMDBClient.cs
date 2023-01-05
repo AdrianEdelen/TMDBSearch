@@ -10,7 +10,7 @@ namespace TMDB
 {
     class TMDBClient : HttpClient
     {
-        private string _key = "?api_key=692ba3c361bb2af594aac5a5be010159"; //private key
+        private string _key = "<redacted>"; //private key
 
 
         public TMDBClient(string key)
